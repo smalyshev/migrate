@@ -57,7 +57,7 @@ class Checker
 		self::DEPRECATED_ALT => "Function '%s' is deprecated, please use '%s' instead",
 		self::KEYWORD => "'%s' is now a keyword, rename the function",
 		self::TOSTRING => "__toString() method should not take any parameters",
-		self::NOSTATIC => "Magic method %s can not be declated as static",
+		self::NOSTATIC => "Magic method %s can not be declared as static",
 		self::NOTPUBLIC => "Magic method %s should be declared as public",
 		);
 	
@@ -148,7 +148,7 @@ class Checker
 	}
 	
 	/**
-	 * Ensure that method is not declated static
+	 * Ensure that method is not declared static
 	 * 
 	 * @param array $token
 	 * @param int $access
@@ -161,7 +161,7 @@ class Checker
 	}
 	
 	/**
-	 * Ensure that method is declated public
+	 * Ensure that method is declared public
 	 * 
 	 * @param array $token
 	 * @param int $access
