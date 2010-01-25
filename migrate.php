@@ -222,6 +222,9 @@ class Checker
 	
 	protected function checkFunctionDef($token, $i, $tokens)
 	{
+		if(!is_array($token)) {
+			return;
+		}
 		if($this->debug >= 2) {
 			echo "FUNCTION: $token[1] at $token[2]\n";
 		}	
