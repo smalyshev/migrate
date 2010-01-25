@@ -243,6 +243,10 @@ class Checker
 	
 	protected function checkFunctionCall($token)
 	{
+		if(!is_array($token)) {
+			return;
+		}
+		
 		if($this->debug >= 2) {
 			echo "CALL: $token[1] at $token[2]\n";	
 		}
