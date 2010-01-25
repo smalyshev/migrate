@@ -135,6 +135,7 @@ class Checker
 				case T_PRIVATE:
 					$access |= ReflectionMethod::IS_PRIVATE;
 					break;
+				case '&':
 				case T_PUBLIC:
 				case T_FINAL:
 				case T_ABSTRACT:
@@ -313,7 +314,7 @@ class Checker
 				// function definition
 				do{
 					list($i, $token) = each($tokens);
-				} while($token && is_array($token) && $token[0] != T_STRING );
+				} while($token && (is_array($token) && $token[0] != T_STRING || $token == '&'));
 				if($token == '(') {
 					// got to ( - we must have mistaken func name for something else - rewind
 					prev($tokens);prev($tokens);
