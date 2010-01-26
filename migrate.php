@@ -5,8 +5,9 @@ function usage($argv) {
 	$help = <<<ENDH
 Usage: $argv[0] [options] {file(s) to check}
 options:
-    -h|--help       This help
-    -d L|--debug L  Set debug level L 
+    -h|--help                  This help
+    -d L|--debug L             Set debug level L
+    -e <dir>|--exclude <dir>   Exclude <dir> from migration
 
 File(s) can be either filenames or directories. 
 ENDH;
@@ -31,6 +32,17 @@ for($i=1;$i<$_SERVER['argc'];$i++) {
 		}
 		continue;
 	}
+
+	if($option == "-e" || $option == "--exclude") {
+		$i++;
+		if($i<$_SERVER['argc']) {
+			$chk->exclude = $_SERVER['argv'][$i];
+		} else {
+			usage($_SERVER['argv']);
+		}
+		continue;
+	}
+
 	$needhelp = false;
 	$chk->check($option);
 }
@@ -42,7 +54,8 @@ if($needhelp) {
 class Checker 
 {
 	public $debug = 0;
-	
+	public $exclude = '';
+
 	protected $_filename;
 	
 	const DEPRECATED = 'deprecated-func';
@@ -266,6 +279,14 @@ class Checker
 	{
 		$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($filename));
 		foreach($files as $object) {
+			if($this->exclude != '' && strpos($object->getPathname(), DIRECTORY_SEPARATOR . $this->exclude . DIRECTORY_SEPARATOR) !== false) {
+				if($this->debug >= 1) {
+					echo "SKIPPING: $object\n";
+					flush();
+				}
+				continue;
+			}
+
 			if($object->isFile() && preg_match('/\.php$/', $object->getFilename())) {
 				$this->check($object->getPathName());
 			}
