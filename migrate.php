@@ -330,7 +330,7 @@ class Checker
 			}
 			if($this->debug >= 3) {
 				if(is_int($token[0])) {
-					echo sprintf("%d: Token %s(%d) -> %s\n", $token[2], token_name($token[0]), $token[0], substr($token[1], 0, 20));
+					echo sprintf("%d: Token %s(%d) -> %s\n", $linenum, token_name($token[0]), $token[0], substr($token[1], 0, 20));
 				} else {
 					echo sprintf("Token '%s'\n", $token);
 				}
