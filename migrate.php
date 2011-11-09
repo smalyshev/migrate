@@ -64,6 +64,7 @@ class Checker
 	const TOSTRING = 'tostring-noparam';
 	const NOSTATIC = 'no-static';
 	const NOTPUBLIC = 'not-public';
+	const NEW_REFERENCE = 'new-reference';
 	
 	protected $_messages = array(
 		self::DEPRECATED => "Function '%s' is deprecated, its use is no longer recommended",
@@ -72,6 +73,7 @@ class Checker
 		self::TOSTRING => "__toString() method should not take any parameters",
 		self::NOSTATIC => "Magic method %s can not be declared as static",
 		self::NOTPUBLIC => "Magic method %s should be declared as public",
+		self::NEW_REFERENCE => "Assigning the return value of new by reference is deprecated",
 		);
 	
 	protected $_deprecated = array(
@@ -321,8 +323,11 @@ class Checker
 		}
 		// compact array
 		$tokens = array_values($tokens);
-		
+		$linenum = 0;
 		while(list($i, $token) = each($tokens)) {
+			if (is_array($token)) {
+				$linenum = $token[2];
+			}
 			if($this->debug >= 3) {
 				if(is_int($token[0])) {
 					echo sprintf("%d: Token %s(%d) -> %s\n", $token[2], token_name($token[0]), $token[0], substr($token[1], 0, 20));
@@ -351,7 +356,9 @@ class Checker
 					&& $tokens[$i-2][0] != T_NEW) {
 				// function call
 				$this->checkFunctionCall($tokens[$i-1]);
-			} 
+			} else if ($token[0] == '=' && $tokens[$i+1][0] == '&' && $tokens[$i+2][0] === T_NEW) {
+				$this->warning(self::NEW_REFERENCE, $linenum);
+			}
 		}
 		return $this;
 	}
